@@ -28,6 +28,7 @@ include_recipe "lighttpd::mod_cgi"
 include_recipe "9base"
 
 execute "get_discount" do
+  creates "/usr/bin/markdown"
   cwd "/tmp"
   command <<-COMMAND
     curl http://www.pell.portland.or.us/~orc/Code/discount/discount-2.1.3.tar.bz2 | tar xjf -
@@ -41,12 +42,11 @@ end
 execute "get_swerc" do
   cwd    "/srv"
   command "curl http://hg.suckless.org/swerc/archive/tip.tar.gz | tar xzf - ; mv swerc* swerc"
-  action :nothing
+  #action :nothing
 end
 
-execute "include_swerc_config" do
-  command "echo 'include \"/etc/lighttpd/sites.conf\"' >> /etc/lighttpd/lighttpd.conf"
-  action :nothing
+cookbook_file "/srv/swerc/bin/util.rc" do
+  source "util.rc"
 end
 
 directory "/var/www/sites" do
@@ -59,8 +59,13 @@ git "/var/www/sites" do
   user   "cdarwin"
 end
 
+execute "include_swerc_config" do
+  command "echo 'include \"/etc/lighttpd/sites.conf\"' >> /etc/lighttpd/lighttpd.conf"
+  notifies :restart, "service[lighttpd]", :immediately
+end
+
 cookbook_file "/etc/lighttpd/sites.conf" do
   source "sites.conf"
   mode   0644
-  #notifies :restart, "service[lighttpd]", :immediately
+  notifies :run, "execute[include_swerc_config]", :immediately
 end
