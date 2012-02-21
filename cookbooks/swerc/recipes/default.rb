@@ -40,13 +40,14 @@ execute "get_discount" do
 end
 
 execute "get_swerc" do
+  creates "/srv/swerc"
   cwd    "/srv"
   command "curl http://hg.suckless.org/swerc/archive/tip.tar.gz | tar xzf - ; mv swerc* swerc"
-  #action :nothing
 end
 
 cookbook_file "/srv/swerc/bin/util.rc" do
   source "util.rc"
+  mode   0644
 end
 
 directory "/var/www/sites" do
@@ -62,6 +63,7 @@ end
 execute "include_swerc_config" do
   command "echo 'include \"/etc/lighttpd/sites.conf\"' >> /etc/lighttpd/lighttpd.conf"
   notifies :restart, "service[lighttpd]", :immediately
+  action :nothing
 end
 
 cookbook_file "/etc/lighttpd/sites.conf" do
