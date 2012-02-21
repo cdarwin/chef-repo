@@ -13,7 +13,7 @@ override_attributes(
     :authorization => {
         :sudo => {
             :groups => ["sudo", "admin", "sysadmin"],
-            :users => ["cdarwin"],
+            :users => ["ubuntu", "cdarwin"],
             :passwordless => true
         }
     }
