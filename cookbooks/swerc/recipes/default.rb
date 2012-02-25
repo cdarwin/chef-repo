@@ -59,15 +59,3 @@ git "/var/www/sites" do
   action :sync
   user   "cdarwin"
 end
-
-execute "include_swerc_config" do
-  command "echo 'include \"/etc/lighttpd/sites.conf\"' >> /etc/lighttpd/lighttpd.conf"
-  notifies :restart, "service[lighttpd]", :immediately
-  action :nothing
-end
-
-cookbook_file "/etc/lighttpd/sites.conf" do
-  source "sites.conf"
-  mode   0644
-  notifies :run, "execute[include_swerc_config]", :immediately
-end

@@ -34,3 +34,14 @@ service "lighttpd" do
   action :nothing
   supports :status => true, :start => true, :stop => true, :restart => true
 end
+
+cookbook_file "/etc/lighttpd/lighttpd.conf" do
+  source "lighttpd.conf"
+  notifies :restart, "service[lighttpd]", :immediately
+end
+
+cookbook_file "/etc/lighttpd/sites.conf" do
+  source "sites.conf"
+  mode   0644
+  notifies :restart, "service[lighttpd]", :immediately
+end
