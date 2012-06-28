@@ -24,10 +24,19 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-%w{git-core tmux vim-nox vim-rails pdksh htop}.each do |pkg|
+%w{git-core tmux vim-nox vim-rails pdksh htop python-software-properties}.each do |pkg|
   package pkg do
     action :install
   end
+end
+
+execute "pre_install_golang" do
+  command 'echo "y" | add-apt-repository ppa:gophers/go'
+  actio   :run
+end
+
+package "golang-stable" do
+  action :install
 end
 
 search(:users, 'id:cdarwin') do |u|
