@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-%w{git-core tmux vim pdksh htop}.each do |pkg|
+%w{git-core tmux vim-nox vim-rails pdksh htop}.each do |pkg|
   package pkg do
     action :install
   end
